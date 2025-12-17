@@ -10,7 +10,6 @@ from .models import Driver, Car, Manufacturer
 def index(request):
     """View function for the home page of the site."""
 
-    # Session-based visit counter
     num_visits = request.session.get("num_visits", 0)
     request.session["num_visits"] = num_visits + 1
 
@@ -48,6 +47,11 @@ class CarDetailView(LoginRequiredMixin, generic.DetailView):
 class DriverListView(LoginRequiredMixin, generic.ListView):
     model = Driver
     paginate_by = 5
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['current_user'] = self.request.user
+        return context
 
 
 class DriverDetailView(LoginRequiredMixin, generic.DetailView):
